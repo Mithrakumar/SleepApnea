@@ -1,0 +1,48 @@
+clf 
+close all;
+clc;
+% Inputs sound files.
+[y1,fs1]= audioread('G:\Sem 3\Signals and Systems\Project\Standard(1).mp3');
+[y2,fs2]= audioread('G:\Sem 3\Signals and Systems\Project\Test Signal 2(2).mp3');
+[y3,fs3]= audioread('G:\Sem 3\Signals and Systems\Project\Test Signal 3(2).mp3');
+[y4,fs4]= audioread('G:\Sem 3\Signals and Systems\Project\Normal(1).mp3');
+
+% cut signal to same length
+voice1 = y1(fs1*1:fs1*9);
+voice2 = y2(fs2*1:fs2*9);
+voice3 = y3(fs3*1:fs3*9);
+voice4 = y4(fs4*1:fs4*9);
+% find new length
+N2x = length(voice2);
+N1x = length(voice1);
+N3x = length(voice3);
+N4x = length(voice4);
+% find new time
+t1x = (0:1:length(voice1)-1)/fs1;
+t2x = (0:1:length(voice2)-1)/fs2;
+t3x = (0:1:length(voice3)-1)/fs3;
+t4x = (0:1:length(voice4)-1)/fs4;
+
+% find new frequency
+f2x = fs2*(0:N2x/2-1)/N2x;
+f1x = fs1*(0:N1x/2-1)/N1x;
+f3x = fs3*(0:N3x/2-1)/N3x;
+f4x = fs4*(0:N4x/2-1)/N4x;
+
+%% plot for the cut signal
+figure; subplot (2,1,1); plot(t1x, voice1);
+str1=sprintf('Plot Sound1 with sampling rate = %d Hz and number sample = %d',fs1,N1x);
+title(str1); xlabel('time(sec)'); ylabel('relative signal strength'); grid on;
+
+subplot(2,1,2); plot(t2x, voice4);
+str2=sprintf('Plot Sound2 with sampling rate = %d Hz and number sample = %d', fs2, N2x);
+title(str2); xlabel('time (sec)'); ylabel('relative signal strength'); grid on;
+
+%% calculate mean squared deviation(MSD)
+D= voice1 - voice4;
+MSE=mean(D.^2)
+if MSE <=0.0005;
+    disp('The breathing is normal');
+else
+    disp('The patient has apneatic breathing');
+end
